@@ -2,7 +2,7 @@ TARGET := CurrentDateTimeTest
 PROTO := current_date_time
 CC := g++
 CPPFLAGS := -W -Wall -g -pthread -I/usr/local/include
-SERFILE := /tmp/protobuftest.cpp.ser
+SERFILE := protobuftest.cpp.ser
 LDLIBS := -L/usr/local/lib -lprotobuf
 
 $(TARGET): $(TARGET).o $(PROTO).pb.o

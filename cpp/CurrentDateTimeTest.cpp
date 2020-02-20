@@ -5,71 +5,74 @@
 #include <iomanip>
 #include <fstream>
 
-void buildMessage(protobuftest::CurrentDateTimeMessage* msg) {
+using namespace std;
+using namespace protobuftest;
+
+void buildMessage(CurrentDateTimeMessage* msg) {
     msg->set_title("A simple test");
     msg->set_counter(42);
-    protobuftest::CurrentDateTimeMessage::Date* date = msg->mutable_date();
+    CurrentDateTimeMessage::Date* date = msg->mutable_date();
     date->set_day(11);
     date->set_month(9);
     date->set_year(2001);
     date->set_weekday("Monday");
-    protobuftest::CurrentDateTimeMessage::Time* time = msg->mutable_time();
+    CurrentDateTimeMessage::Time* time = msg->mutable_time();
     time->set_hours(1);
     time->set_minutes(2);
     time->set_seconds(3);
 }
 
-bool storeMessage(const protobuftest::CurrentDateTimeMessage* msg, const char* fname) {
-    std::ofstream serializingStream(fname, std::ofstream::out | std::ofstream::binary | std::ofstream::trunc);
+bool storeMessage(const CurrentDateTimeMessage* msg, const char* fname) {
+    ofstream serializingStream(fname, ofstream::out | ofstream::binary | ofstream::trunc);
     return msg->SerializeToOstream(&serializingStream);
 }
 
-bool loadMessage(protobuftest::CurrentDateTimeMessage* msg, const char* fname) {
-    std::ifstream serializingStream(fname, std::ofstream::binary);
+bool loadMessage(CurrentDateTimeMessage* msg, const char* fname) {
+    ifstream serializingStream(fname, ofstream::binary);
     return msg->ParseFromIstream(&serializingStream);
 }
 
-void printMessage(const protobuftest::CurrentDateTimeMessage* msg) {
-    auto originalFlags{ std::cout.flags() };
+void printMessage(const CurrentDateTimeMessage* msg) {
+    auto originalFlags{ cout.flags() };
 
-    std::cout << "Received a message:" << std::endl;
-    std::cout << "\tTitle: " << msg->title() << std::endl;
-    std::cout << "\tCounter: " << msg->counter() << std::endl;
+    cout << "Received a message:" << endl;
+    cout << "\tTitle: " << msg->title() << endl;
+    cout << "\tCounter: " << msg->counter() << endl;
     if (msg->has_date()) {
-        const protobuftest::CurrentDateTimeMessage::Date& date = msg->date();
-        std::cout << "\t" << date.weekday() << ", " << date.year() << "-" << std::setw(2) << std::setfill('0') <<
-            date.month() << "-" << date.day() << std::endl;
+        const CurrentDateTimeMessage::Date& date = msg->date();
+        cout << "\t" << date.weekday() << ", " << date.year() << "-" << setw(2) << setfill('0') <<
+            date.month() << "-" << date.day() << endl;
     } else {
-        std::cout << "No date element found!" << std::endl;
+        cout << "No date element found!" << endl;
     }
     if (msg->has_time()) {
-        const protobuftest::CurrentDateTimeMessage::Time& time = msg->time();
-        std::cout << "\t" << time.hours() << ":" << time.minutes() << ":" << time.seconds() << std::endl;
+        const CurrentDateTimeMessage::Time& time = msg->time();
+        cout << "\t" << time.hours() << ":" << time.minutes() << ":" << time.seconds() << endl;
     } else {
-        std::cout << "No time element found!" << std::endl;
+        cout << "No time element found!" << endl;
     }
-    std::cout.flags(originalFlags);
+    cout.flags(originalFlags);
 }
 
 int main(int argc, char* argv[]) {
     if (argc != 2) {
-        std::cerr << "Please provide a filename!" << std::endl;
+        cerr << "Please provide a filename!" << endl;
         exit(1);
     }
     const char* fname = argv[1];
 
-    std::ifstream f(fname);
+    ifstream f(fname);
     if (!f.good()) {
-        std::cout << "Creating current date/time entry" << std::endl;
-        protobuftest::CurrentDateTimeMessage msg;
+        cout << "Creating current date/time entry" << endl;
+        CurrentDateTimeMessage msg;
         buildMessage(&msg);
         storeMessage(&msg, fname);
     }
-    protobuftest::CurrentDateTimeMessage msg2;
+    CurrentDateTimeMessage msg2;
     if (loadMessage(&msg2, fname)) {
         printMessage(&msg2);
     } else {
-        std::cerr << "Failed to load message!" << std::endl;
+        cerr << "Failed to load message!" << endl;
     }
 
     return 0;
