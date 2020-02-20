@@ -3,8 +3,7 @@
 #include <cstring>
 #include <iostream>
 #include <iomanip>
-
-uint8_t memory[sizeof(protobuftest::CurrentDateTimeMessage)] {};
+#include <fstream>
 
 void buildMessage(protobuftest::CurrentDateTimeMessage* msg) {
     msg->set_title("A simple test");
@@ -20,12 +19,14 @@ void buildMessage(protobuftest::CurrentDateTimeMessage* msg) {
     time->set_seconds(3);
 }
 
-bool storeMessage(const protobuftest::CurrentDateTimeMessage* msg) {
-    return msg->SerializeToArray(memory, sizeof(memory));
+bool storeMessage(const protobuftest::CurrentDateTimeMessage* msg, const char* fname) {
+    std::ofstream serializingStream(fname, std::ofstream::out | std::ofstream::binary | std::ofstream::trunc);
+    return msg->SerializeToOstream(&serializingStream);
 }
 
-bool loadMessage(protobuftest::CurrentDateTimeMessage* msg) {
-    return msg->ParseFromArray(memory, msg->ByteSizeLong());
+bool loadMessage(protobuftest::CurrentDateTimeMessage* msg, const char* fname) {
+    std::ifstream serializingStream(fname, std::ofstream::binary);
+    return msg->ParseFromIstream(&serializingStream);
 }
 
 void printMessage(const protobuftest::CurrentDateTimeMessage* msg) {
@@ -50,15 +51,23 @@ void printMessage(const protobuftest::CurrentDateTimeMessage* msg) {
     std::cout.flags(originalFlags);
 }
 
+int main(int argc, char* argv[]) {
+    if (argc != 2) {
+        std::cerr << "Please provide a filename!" << std::endl;
+        exit(1);
+    }
+    const char* fname = argv[1];
 
-int main() {
-
-    protobuftest::CurrentDateTimeMessage message;
-
-    buildMessage(&message);
-    storeMessage(&message);
-    if (loadMessage(&message)) {
-        printMessage(&message);
+    std::ifstream f(fname);
+    if (!f.good()) {
+        std::cout << "Creating current date/time entry" << std::endl;
+        protobuftest::CurrentDateTimeMessage msg;
+        buildMessage(&msg);
+        storeMessage(&msg, fname);
+    }
+    protobuftest::CurrentDateTimeMessage msg2;
+    if (loadMessage(&msg2, fname)) {
+        printMessage(&msg2);
     } else {
         std::cerr << "Failed to load message!" << std::endl;
     }

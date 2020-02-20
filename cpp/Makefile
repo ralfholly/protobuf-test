@@ -1,8 +1,8 @@
-TARGET := server
+TARGET := CurrentDateTimeTest
 PROTO := current_date_time
 CC := g++
 CPPFLAGS := -W -Wall -g -pthread -I/usr/local/include
-
+SERFILE := /tmp/protobuftest.cpp.ser
 LDLIBS := -L/usr/local/lib -lprotobuf
 
 $(TARGET): $(TARGET).o $(PROTO).pb.o
@@ -16,10 +16,8 @@ $(PROTO).pb.h: ../$(PROTO).proto
 
 .PHONY: test
 test: $(TARGET)
-	./$(TARGET)
+	./$< $(SERFILE)
 
 .PHONY: clean
 clean:
-	rm -rf $(TARGET) *.o $(PROTO).pb.*
-
-
+	rm -rf $(TARGET) *.o $(PROTO).pb.* $(SERFILE)
