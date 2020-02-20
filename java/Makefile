@@ -18,4 +18,4 @@ test: $(TARGET).class
 
 .PHONY: clean
 clean:
-	rm -rf *.class $(PROTOIF) $(SERFILE)
+	rm -rf *.class $(PROTOIF) $(SERFILE) com/
