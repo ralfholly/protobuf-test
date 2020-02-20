@@ -6,15 +6,15 @@ SERFILE = /tmp/protobuftest.java.ser
 
 export CLASSPATH := $(CLASSPATH):$(PROTOLIBTAR)
 
-$(TARGET): $(TARGET).java $(PROTOIF)
+$(TARGET).class: $(TARGET).java $(PROTOIF)
 	javac $^
 
 $(PROTOIF): ../$(PROTO).proto
 	protoc --java_out . -I .. $<
 
 .PHONY: test
-test: $(TARGET)
-	java $< $(SERFILE)
+test: $(TARGET).class
+	java $(TARGET) $(SERFILE)
 
 .PHONY: clean
 clean:
