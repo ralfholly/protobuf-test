@@ -4,13 +4,11 @@ package protobuftest;
 option java_package = "com.example.protobuftest";
 // option java_outer_classname = "CurrentDateTime";
 
-message CurrentDateTime {
+message CurrentDateTimeMessage {
   string title = 1;
   uint32 counter = 2;
-  oneof DateOrTime {
-     Date date = 3;
-     Time time = 4;
-  }
+  Date date = 3;
+  Time time = 4;
 
   message Date {
       uint32 day = 1;
