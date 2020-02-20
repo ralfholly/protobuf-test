@@ -2,7 +2,6 @@ syntax = "proto3";
 package protobuftest;
 
 option java_package = "com.example.protobuftest";
-// option java_outer_classname = "CurrentDateTime";
 
 message CurrentDateTimeMessage {
   string title = 1;
@@ -24,4 +23,3 @@ message CurrentDateTimeMessage {
       uint32 milliseconds = 4;
   }
 }
-
