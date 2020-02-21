@@ -33,25 +33,25 @@ bool loadMessage(CurrentDateTimeMessage* msg, const char* fname) {
 }
 
 void printMessage(const CurrentDateTimeMessage* msg) {
-    auto originalFlags{ cout.flags() };
-
     cout << "Received a message:" << endl;
     cout << "\tTitle: " << msg->title() << endl;
     cout << "\tCounter: " << msg->counter() << endl;
     if (msg->has_date()) {
         const CurrentDateTimeMessage::Date& date = msg->date();
-        cout << "\t" << date.weekday() << ", " << date.year() << "-" << setw(2) << setfill('0') <<
-            date.month() << "-" << date.day() << endl;
+        cout << "\t" << date.weekday() << ", " << date.year() << "-" <<
+            setw(2) << setfill('0') << date.month() << "-" <<
+            setw(2) << setfill('0') << date.day() << endl;
     } else {
         cout << "No date element found!" << endl;
     }
     if (msg->has_time()) {
         const CurrentDateTimeMessage::Time& time = msg->time();
-        cout << "\t" << time.hours() << ":" << time.minutes() << ":" << time.seconds() << endl;
+        cout << "\t" << setw(2) << setfill('0') << time.hours() << ":" <<
+            setw(2) << setfill('0') << time.minutes() << ":" <<
+            setw(2) << setfill('0') << time.seconds() << endl;
     } else {
         cout << "No time element found!" << endl;
     }
-    cout.flags(originalFlags);
 }
 
 int main(int argc, char* argv[]) {
