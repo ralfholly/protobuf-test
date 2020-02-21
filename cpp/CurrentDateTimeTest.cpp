@@ -1,4 +1,5 @@
 #include "current_date_time.pb.h"
+#include <google/protobuf/util/json_util.h>
 
 #include <cstring>
 #include <iostream>
@@ -7,6 +8,9 @@
 
 using namespace std;
 using namespace protobuftest;
+using namespace google::protobuf::util;
+
+#undef JSON_SERIALIZATION
 
 void buildMessage(CurrentDateTimeMessage* msg) {
     msg->set_title("A simple test");
@@ -24,6 +28,19 @@ void buildMessage(CurrentDateTimeMessage* msg) {
 
 bool storeMessage(const CurrentDateTimeMessage* msg, const char* fname) {
     ofstream serializingStream(fname, ofstream::out | ofstream::binary | ofstream::trunc);
+#if JSON_SERIALIZATION
+    {
+        // Also save es json file.
+        std::string json;
+        JsonPrintOptions options;
+        options.add_whitespace = true;
+        options.always_print_primitive_fields = true;
+        options.preserve_proto_field_names = true;
+        Status status = MessageToJsonString(*msg, &json, options);
+        ofstream jsonStream(string(fname) + ".json", ofstream::out);
+        jsonStream << json << endl;
+    }
+#endif
     return msg->SerializeToOstream(&serializingStream);
 }
 

@@ -3,7 +3,7 @@ PROTO := current_date_time
 CC := g++
 CPPFLAGS := -W -Wall -g -pthread -I/usr/local/include
 SERFILE := protobuftest.cpp.ser
-LDLIBS := -L/usr/local/lib -lprotobuf
+LDLIBS := -L/usr/local/lib -lprotobuf -lpthread
 
 $(TARGET): $(TARGET).o $(PROTO).pb.o
 
@@ -20,4 +20,4 @@ test: $(TARGET)
 
 .PHONY: clean
 clean:
-	rm -rf $(TARGET) *.o $(PROTO).pb.* $(SERFILE)
+	rm -rf $(TARGET) *.o $(PROTO).pb.* $(SERFILE) $(SERFILE).json
