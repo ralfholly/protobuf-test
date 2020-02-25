@@ -30,7 +30,7 @@ bool storeMessage(const CurrentDateTimeMessage* msg, const char* fname) {
     ofstream serializingStream(fname, ofstream::out | ofstream::binary | ofstream::trunc);
 #if JSON_SERIALIZATION
     {
-        // Also save es json file.
+        // Also save as JSON file.
         std::string json;
         JsonPrintOptions options;
         options.add_whitespace = true;
